@@ -57,6 +57,7 @@
     border: none;
     padding: 13px 26px;
     font-weight: bolder;
+    cursor: pointer;
 }
 
 .botao-2 {
@@ -68,6 +69,7 @@
     border: none;
     padding: 13px 26px;
     font-weight: bolder;
+    cursor: pointer;
 }
 
 .botao-3 {
@@ -79,6 +81,7 @@
     border: none;
     padding: 13px 26px;
     font-weight: bolder;
+    cursor: pointer;
 }
 
 .titulo-1 {
