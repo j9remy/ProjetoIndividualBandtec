@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <title>noSoul Company</title>
+</head>
+<body>
+    <a href="./index.html">
+        <h2 class="titulo-index">
+        NOSOUL COMPANY
+        </h2>
+    </a>
+
+    <nav class="nav-index">
+        <ul>
+            <li>
+                <a href="">HOME</a>
+            </li>
+            <li>
+                <a href="loja.html">LOJA</a>
+            </li>
+            <li>
+                <a href="contato.html">CONTATO</a>
+            </li>
+            <li>
+                <a href="sobre.html">SOBRE</a>
+            </li>
+            <li>
+                <a href="cadastro.html">CADASTRAR</a>
+            </li>
+            <li>
+                <a href="login.html">LOGIN</a>
+            </li>
+        </ul>
+    </nav>
+    <!--header fim-->
+
+    <div class="cadastro">
+        <div class="container">
+            <h1>CADASTRO</h1>
+            <div class="formulario">
+                <form id="form_cadastro" method="post" onsubmit="return cadastrar()">
+                    Nome completo:
+                    <input type="text" name="nome" class="input-padrao" autofocus="autofocus"
+                        placeholder="Nome e sobrenome" required minlength="4">
+
+                    CPF:
+                    <input type="text" name="cpf" pattern="[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}" class="input-padrao"
+                        autofocus="autofocus" placeholder="xxx.xxx.xxx.-xx" required minlength="4">
+
+                    Data de nascimento:
+                    <input type="date" name="dataNasc" class="input-padrao" autofocus="autofocus"
+                        placeholder="Data de nascimento" required minlength="4">
+
+                    Sexo:
+                    <input type="text" name="sexo" class="input-padrao" autofocus="autofocus"
+                        placeholder="Masculino, feminino ou não declarado" required minlength="4">
+
+                    E-mail:
+                    <input type="email" name="email" class="input-padrao" autofocus="autofocus" placeholder="E-mail"
+                        required minlength="4">
+
+                    Senha:
+                    <input type="password" name="senha" class="input-padrao" autofocus="autofocus" placeholder="Senha"
+                        required minlength="4">
+
+                    Telefone:
+                    <input type="tel" pattern="[0-9]{2}-[0-9]{9}" name="telefone" class="input-padrao"
+                        autofocus="autofocus" placeholder="xx-xxxxxxxxx" required minlength="4">
+
+                    <input type="submit" id="btn_entrar" value="CADASTRAR" class="-cadastro" style="cursor: pointer;">
+                </form>
+
+                <img src="aguarde-orange.gif" id="img_aguarde" style="display: none; width:100px">
+
+                <div id="div_erro" style="background-color: sandybrown; color: maroon; display: none;">
+                    Erro no cadastro
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function cadastrar() {
+        aguardar();
+        var formulario = new URLSearchParams(new FormData(form_cadastro));
+
+        fetch("/usuarios/cadastrar", {
+            method: "POST",
+            body: formulario
+        }).then(function (response) {
+
+            if (response.ok) {
+                response.json().then(json => {
+                    sessionStorage.idUsuario_meu_app = json.idUsuario
+                });
+
+                window.location.href = 'cadastro-endereco.html';
+
+            } else {
+
+                console.log('Erro de cadastro!');
+                response.text().then(function (resposta) {
+                    div_erro.innerHTML = resposta;
+                });
+                finalizar_aguardar();
+            }
+        });
+
+        return false;
+    }
+
+    function aguardar() {
+        btn_entrar.disabled = true;
+        img_aguarde.style.display = 'block';
+        div_erro.style.display = 'none';
+    }
+
+    function finalizar_aguardar() {
+        btn_entrar.disabled = false;
+        img_aguarde.style.display = 'none';
+        div_erro.style.display = 'block';
+    }
+</script>

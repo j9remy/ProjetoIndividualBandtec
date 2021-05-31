@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+    <title>noSoul Company</title>
+</head>
+<body>
+    <a href="./index.html">
+        <h2 class="titulo-index">
+        NOSOUL COMPANY
+        </h2>
+    </a>
+    <nav class="nav-index">
+        <ul>
+            <li>
+                <a href="">HOME</a>
+            </li>
+            <li>
+                <a href="loja.html">LOJA</a>
+            </li>
+            <li>
+                <a href="contato.html">CONTATO</a>
+            </li>
+            <li>
+                <a href="sobre.html">SOBRE</a>
+            </li>
+            <li>
+                <a href="cadastro.html">CADASTRAR</a>
+            </li>
+            <li>
+                <a href="login.html">LOGIN</a>
+            </li>
+        </ul>
+    </nav>
+    <!--header fim-->
+
+    <div class="cadastro-endereco">
+        <div class="container">
+            <h1>Insira seu endereço</h1>
+            <div class="formulario">
+                <form id="form_endereco" method="post" onsubmit="return cadastrar_endereco()">
+                    Cidade:
+                    <input type="text" name="cidade" class="input-padrao" autofocus="autofocus"
+                        placeholder="Insira sua cidade" required minlength="4">
+
+                    Estado:
+                    <input type="text" name="estado" class="input-padrao" autofocus="autofocus"
+                        placeholder="Insira seu estado" required minlength="2">
+
+                    CEP:
+                    <input type="text" name="cep" pattern="[0-9]{5}-[0-9]{3}" class="input-padrao" autofocus="autofocus"
+                        placeholder="xxxxx-xxx" required minlength="4">
+
+                    Rua:
+                    <input type="text" name="rua" class="input-padrao" autofocus="autofocus"
+                        placeholder="Insira sua rua" required minlength="4">
+
+                    Bairro:
+                    <input type="text" name="bairro" class="input-padrao" autofocus="autofocus"
+                        placeholder="Insira seu bairro" required minlength="4">
+
+                    Número:
+                    <input type="text" name="numero" class="input-padrao" autofocus="autofocus"
+                        placeholder="Insira o número da residência" required minlength="1">
+
+                    <input type="submit" id="btn_entrar" value="ENTRAR" class="botao-cadastro-endereco" style="cursor: pointer;">
+                </form>
+
+                <img src="aguarde-orange.gif" id="img_aguarde" style="display: none; width:100px">
+
+                <div id="div_erro" style="background-color: sandybrown; color: maroon; display: none;">
+                    Erro no cadastro
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function cadastrar_endereco() {
+        aguardar();
+        var formulario = new URLSearchParams(new FormData(form_endereco));
+        var idEndereco = sessionStorage.idUsuario_meu_app;
+        fetch("/usuarios/endereco", {
+            method: "POST",
+            body: formulario
+        }).then(function (response) {
+
+            if (response.ok) {
+                response.json().then(json => {
+                    sessionStorage.idEndereco_meu_app = json.idEndereco
+                    cadastrar_usuario_endereco();
+                    window.location.href = 'login.html';
+                });
+
+            } else {
+
+                console.log('Erro de cadastro!');
+                response.text().then(function (resposta) {
+                    div_erro.innerHTML = resposta;
+                });
+                finalizar_aguardar();
+            }
+        });
+
+        return false;
+    }
+
+    function cadastrar_usuario_endereco() {
+        aguardar();
+        var formulario = new URLSearchParams(new FormData(form_endereco));
+        var idEndereco = sessionStorage.idEndereco_meu_app;
+        var idUsuario = sessionStorage.idUsuario_meu_app;
+
+        fetch(`/usuarios/usuario_endereco/${idUsuario}/${idEndereco}`, {
+            method: "POST",
+            body: formulario
+        }).then(function (response) {
+
+            if (response.ok) {
+                response.json().then(json => {
+                    alert("Foi")
+                });
+
+            } else {
+
+                console.log('Erro de cadastro!');
+                response.text().then(function (resposta) {
+                    div_erro.innerHTML = resposta;
+                });
+                finalizar_aguardar();
+            }
+        });
+
+        return false;
+    }
+
+
+    function aguardar() {
+        btn_entrar.disabled = true;
+        img_aguarde.style.display = 'block';
+        div_erro.style.display = 'none';
+    }
+
+    function finalizar_aguardar() {
+        btn_entrar.disabled = false;
+        img_aguarde.style.display = 'none';
+        div_erro.style.display = 'block';
+    }
+</script>
